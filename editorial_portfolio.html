@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emily Halstead — Portfolio</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans (Clean Tech Sans), Space Mono (Retro-Future dot-matrix), Syne (Bold Display) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#F9F6F0',   // Warm delicate linen background
+                            100: '#F2ECE2',  // Raw warm concrete light gray
+                            200: '#E5D9C4',  // Earthy mechanical structural borders
+                        },
+                        nothing: {
+                            950: '#1A1513',  // Technical asphalt/charcoal black
+                            800: '#3D3330',  // Muted deep graphite
+                            400: '#9E8E8A',  // Earthy metallic taupe
+                            100: '#EFEAE1',  // Soft sand structural grid lines
+                        },
+                        blush: {
+                            50: '#FDF8F7',   // Ultra light rose water
+                            100: '#FCEBEA',  // Soft pastel pink neon fluid
+                            200: '#F7D3CE',  // Silk rose-gold
+                            300: '#ECAC9F',  // Vivid coral-blush dot indicator
+                            600: '#C7796D',  // Earthy sunset clay pink
+                        },
+                    },
+                    fontFamily: {
+                        mono: ['Space Mono', 'monospace'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F9F6F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ECAC9F;
+            border-radius: 2px;
+        }
+        
+        /* Nothing OS Inspired Dot Grid Backdrop */
+        .dot-grid {
+            background-image: radial-gradient(#ECAC9F 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Interactive Custom Editorial Cursors */
+        .custom-cursor {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #1A1513;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            transition: width 0.1s, height 0.1s, background-color 0.1s;
+        }
+        .custom-cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #ECAC9F;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="bg-cream-50 text-nothing-950 font-sans antialiased selection:bg-blush-200 selection:text-nothing-950 dot-grid overflow-x-hidden">
+
+    <div id="cursor" class="custom-cursor hidden md:block rounded-none"></div>
+    <div id="cursor-dot" class="custom-cursor-dot hidden md:block rounded-none"></div>
+
+    <header class="fixed top-0 left-0 w-full z-50 px-6 md:px-12 py-5 bg-cream-50/90 backdrop-blur-md border-b border-nothing-950/10 flex justify-between items-center">
+        <a href="#hero" class="flex items-center gap-2">
+            <span class="font-mono font-bold tracking-tighter text-sm uppercase">EMILY HALSTEAD</span>
+            <!-- Glowing Pink Status Dot Indicator -->
+            <span class="w-2 h-2 rounded-full bg-blush-300 animate-ping"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-blush-300 -ml-3.5"></span>
+        </a>
+        
+        <!-- Navigation Directories -->
+        <nav class="hidden md:flex items-center gap-1">
+            <a href="#work" class="font-mono text-[11px] tracking-tight hover:bg-nothing-950 hover:text-white transition-all px-4 py-1.5 border border-transparent hover:border-nothing-950">
+                [01_WORK_SAMPLES]
+            </a>
+            <a href="#manifesto" class="font-mono text-[11px] tracking-tight hover:bg-nothing-950 hover:text-white transition-all px-4 py-1.5 border border-transparent hover:border-nothing-950">
+                [02_PHILOSOPHY]
+            </a>
+            <a href="#skills" class="font-mono text-[11px] tracking-tight hover:bg-nothing-950 hover:text-white transition-all px-4 py-1.5 border border-transparent hover:border-nothing-950">
+                [03_PIPELINE]
+            </a>
+            <a href="#connect" class="font-mono text-[11px] tracking-tight hover:bg-nothing-950 hover:text-white transition-all px-4 py-1.5 border border-transparent hover:border-nothing-950">
+                [04_CONNECT]
+            </a>
+        </nav>
+
+        <!-- Mobile Menu Trigger -->
+        <button id="mobile-menu-btn" class="md:hidden flex flex-col justify-between w-5 h-3 focus:outline-none">
+            <span class="w-full h-[1px] bg-nothing-950" id="bar1"></span>
+            <span class="w-full h-[1px] bg-nothing-950" id="bar2"></span>
+        </button>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-cream-100 transform translate-x-full transition-transform duration-500 ease-out flex flex-col justify-center px-8 gap-6 md:hidden border-l border-nothing-950">
+        <nav class="flex flex-col gap-4 font-mono text-xl">
+            <a href="#work" onclick="toggleMenu()" class="hover:text-blush-600">[01] WORK SAMPLES</a>
+            <a href="#manifesto" onclick="toggleMenu()" class="hover:text-blush-600">[02] PHILOSOPHY</a>
+            <a href="#skills" onclick="toggleMenu()" class="hover:text-blush-600">[03] PIPELINE</a>
+            <a href="#connect" onclick="toggleMenu()" class="hover:text-blush-600">[04] CONNECT</a>
+        </nav>
+        <div class="h-[1px] bg-nothing-950/20 my-2"></div>
+        <div class="font-mono text-[10px] tracking-tight text-nothing-400">
+            <p>APPLYING TO: 3D ANIMATION & VFX</p>
+            <p class="mt-1">© EMILY HALSTEAD 2026</p>
+        </div>
+    </div>
+
+    <section id="hero" class="min-h-screen pt-28 pb-16 px-6 md:px-12 flex flex-col lg:flex-row items-stretch gap-0 relative border-b border-nothing-950/10">
+        
+        <!-- Left Column: Bio / System Specs -->
+        <div class="w-full lg:w-1/2 flex flex-col justify-between py-10 lg:pr-12 border-b lg:border-b-0 lg:border-r border-nothing-950/10 space-y-12">
+            
+            <!-- Technical Status Box (Nothing Phone look) -->
+            <div class="border border-nothing-950/20 bg-cream-100/50 p-6 space-y-4 rounded-none">
+                <div class="flex justify-between items-center border-b border-nothing-950/10 pb-3">
+                    <span class="font-mono text-[11px] tracking-wider text-nothing-400">STUDENT PROFILE // SYSTEM STATUS</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 bg-blush-200 text-nothing-950 uppercase font-semibold">ONLINE</span>
+                </div>
+                
+                <!-- Front page main bio paragraph -->
+                <p class="font-sans text-lg md:text-xl text-nothing-950 leading-relaxed font-light">
+                    hello , my name is emily halstead and I currently study digital art at the brit school . My favourite element of art is the 3d workflow - modelling , sculping , substance painter , unreal engine .
+                </p>
+            </div>
+
+            <!-- Monospaced Header & Large Typographic Stamp -->
+            <div class="space-y-4">
+                <div class="font-mono text-[11px] text-nothing-400">// CANDIDATE DOSSIER</div>
+                <h1 class="font-display text-5xl md:text-7xl font-extrabold text-nothing-950 uppercase tracking-tight leading-none">
+                    EMILY<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-nothing-950 via-blush-600 to-blush-300">HALSTEAD</span>
+                </h1>
+                <p class="font-mono text-xs text-nothing-400">CURATING ORGANIC ARCHITECTURE & VISUAL EFFECTS SYSTEMS.</p>
+            </div>
+
+            <!-- Call-to-action Action Buttons -->
+            <div class="flex flex-wrap gap-2 pt-4">
+                <a href="#work" class="font-mono text-xs px-6 py-4 bg-nothing-950 hover:bg-blush-300 hover:text-nothing-950 text-white transition-all flex items-center gap-3">
+                    EXPLORE ACTIVE_FILES [↓]
+                </a>
+                <a href="#manifesto" class="font-mono text-xs px-6 py-4 border border-nothing-950 hover:bg-nothing-100 transition-all text-nothing-950">
+                    READ_MANIFESTO.md
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Column: Interactive 3D Clay-Blob viewport simulator -->
+        <div class="w-full lg:w-1/2 flex flex-col justify-between p-6 lg:p-12 relative overflow-hidden bg-cream-100/30">
+            <!-- Glassmorphic Device Screen Box -->
+            <div class="w-full h-[350px] md:h-[500px] border border-nothing-950 relative flex items-center justify-center bg-cream-50/70 shadow-lg">
+                <!-- Dot matrix alignment metadata grids -->
+                <span class="absolute top-2 left-2 font-mono text-[9px] text-nothing-400">[0,0]</span>
+                <span class="absolute top-2 right-2 font-mono text-[9px] text-nothing-400">[W_100%]</span>
+                <span class="absolute bottom-2 left-2 font-mono text-[9px] text-nothing-400">[H_AUTO]</span>
+                <span class="absolute bottom-2 right-2 font-mono text-[9px] text-nothing-400">[FPS_60]</span>
+                
+                <!-- WebGL Canvas Anchor -->
+                <div id="three-canvas-container" class="absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+            </div>
+
+            <!-- Information footer ticker below 3D window -->
+            <div class="flex justify-between items-center pt-6 font-mono text-[10px] text-nothing-400 border-t border-nothing-950/10 mt-4">
+                <span>INTERACTIVE_MESH: ORBIT SYSTEM ACTIVE</span>
+                <span>DRAG TO ROTATE TEXTURED CLAY</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="py-24 px-6 md:px-12 border-b border-nothing-950/10 bg-cream-50/20">
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 pb-6 border-b border-nothing-950">
+                <div>
+                    <span class="font-mono text-xs text-blush-600">// SOURCE DIRECTORY // ACTIVE SPECIMENS</span>
+                    <h2 class="font-display text-4xl md:text-5xl font-black text-nothing-950 uppercase mt-2">Active Project Dossiers</h2>
+                </div>
+                
+                <!-- Category Filters (Functional) -->
+                <div class="flex flex-wrap gap-1 font-mono text-[10px]">
+                    <button onclick="filterProjects('all')" id="filter-all" class="filter-btn px-4 py-2 bg-nothing-950 text-cream-50 border border-nothing-950 transition-all">
+                        ALL_INDEX
+                    </button>
+                    <button onclick="filterProjects('cmp')" id="filter-cmp" class="filter-btn px-4 py-2 bg-transparent hover:bg-cream-100 text-nothing-950 border border-nothing-950/20 transition-all">
+                        CREATIVE_MEDIA_PROJECT
+                    </button>
+                    <button onclick="filterProjects('vfx')" id="filter-vfx" class="filter-btn px-4 py-2 bg-transparent hover:bg-cream-100 text-nothing-950 border border-nothing-950/20 transition-all">
+                        3D_AND_VFX
+                    </button>
+                    <button onclick="filterProjects('photo')" id="filter-photo" class="filter-btn px-4 py-2 bg-transparent hover:bg-cream-100 text-nothing-950 border border-nothing-950/20 transition-all">
+                        RAW_REFERENCE
+                    </button>
+                </div>
+            </div>
+
+            <!-- Asymmetric Grid Grid System (Nothing design language) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1" id="portfolio-grid">
+                
+                <!-- NEW TARGET COMPONENT: Creative Media Project (THE JOURNEY) - Taking up large grid space -->
+                <div class="project-card group bg-cream-100/50 border border-nothing-950/20 p-6 flex flex-col justify-between transition-all hover:bg-cream-100 lg:col-span-3" data-category="cmp">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center font-mono text-[10px] text-nothing-400">
+                            <span>ID: EM-CMP // PRIMARY_EXHIBIT</span>
+                            <span class="text-blush-600 font-bold uppercase animate-pulse">[FEATURED WORK]</span>
+                        </div>
+                        
+                        <!-- Highres main picture frame -->
+                        <div class="relative aspect-video w-full overflow-hidden border border-nothing-950 bg-cream-50">
+                            <img src="finalpiecejourney2.jpg" alt="Creative Media Project - The Journey" 
+                                 class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500"
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=1200';">
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 grid grid-cols-1 lg:grid-cols-3 gap-6 items-end">
+                        <div class="lg:col-span-2 space-y-4">
+                            <span class="font-mono text-xs text-blush-600 tracking-wider">PROJECT: CREATIVE MEDIA PROJECT — THE JOURNEY</span>
+                            <h3 class="font-mono text-2xl font-bold uppercase text-nothing-950">Fallen Moose Antler Highlands</h3>
+                            <p class="font-sans text-sm text-nothing-800 italic font-light leading-relaxed max-w-2xl">
+                                "you have just stumbled across giant fallen moose antlers in the canadian highlands . Do you choose to cross the path to complet the journey?"
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <button onclick="openDrawer('proj-cmp')" class="w-full lg:w-auto font-mono text-xs px-6 py-4 bg-nothing-950 hover:bg-blush-300 hover:text-nothing-950 text-white transition-all uppercase tracking-tight">
+                                OPEN_PIPELINE_DIAGRAM.sys [→]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Card 2: 3D/VFX Subdivision -->
+                <div class="project-card group bg-cream-100/50 border border-nothing-950/20 p-6 flex flex-col justify-between transition-all hover:bg-cream-100 lg:col-span-2" data-category="vfx">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center font-mono text-[10px] text-nothing-400">
+                            <span>ID: EM-01 // SUBDIVISION_MODEL</span>
+                            <span>[01/03]</span>
+                        </div>
+                        <div class="relative aspect-video w-full overflow-hidden border border-nothing-950 bg-cream-50">
+                            <img src="images/model-wireframe.jpg" alt="VFX Model Breakdowns" 
+                                 class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500"
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200';">
+                        </div>
+                    </div>
+                    <div class="pt-6 space-y-4">
+                        <h3 class="font-mono text-xl font-bold uppercase text-nothing-950">Procedural Botanical specimen topology</h3>
+                        <p class="text-xs text-nothing-400 leading-relaxed max-w-xl font-light">
+                            Analyzing complex geometry flow and high-precision rigging models. Purpose built to exhibit pristine surface topology and optimization metrics in Maya and Substance.
+                        </p>
+                        <button onclick="openDrawer('proj-vfx-wire')" class="font-mono text-[11px] underline hover:text-blush-600 transition-colors">
+                            READ_SPEC_SHEET.sys
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Card 3: Reference/Photography -->
+                <div class="project-card group bg-cream-100/50 border border-nothing-950/20 p-6 flex flex-col justify-between transition-all hover:bg-cream-100" data-category="photo">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center font-mono text-[10px] text-nothing-400">
+                            <span>ID: EM-03 // REFERENCE_CAPTURE</span>
+                            <span>[02/03]</span>
+                        </div>
+                        <div class="relative aspect-square w-full overflow-hidden border border-nothing-950 bg-cream-50">
+                            <img src="images/photo-1.jpg" alt="Tactile Forms photography" 
+                                 class="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500"
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=800';">
+                        </div>
+                    </div>
+                    <div class="pt-6 space-y-4">
+                        <h3 class="font-mono text-lg font-bold uppercase text-nothing-950">Terrestrial Macro reference maps</h3>
+                        <p class="text-xs text-nothing-400 leading-relaxed font-light">
+                            Captured reference library of dry organic materials. Utilized in constructing displacement and scattering layers for 3D sculpt models.
+                        </p>
+                        <button onclick="openDrawer('proj-photo-tact')" class="font-mono text-[11px] underline hover:text-blush-600 transition-colors">
+                            LOAD_RAW_METADATA.sys
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div id="project-drawer" class="fixed inset-y-0 right-0 w-full md:w-[700px] bg-cream-50 z-50 transform translate-x-full transition-transform duration-500 ease-in-out shadow-2xl flex flex-col border-l border-nothing-950">
+        <!-- Close trigger bar inside drawer -->
+        <div class="flex justify-between items-center px-8 py-6 border-b border-nothing-950/10">
+            <span class="font-mono text-[10px] text-nothing-400">VFX_WORKFLOW_STUDY.log</span>
+            <button onclick="closeDrawer()" class="font-mono text-xs hover:text-blush-600 transition-colors uppercase">
+                [CLOSE_FILE_X]
+            </button>
+        </div>
+
+        <!-- Dynamic Drawer Body (Injected by JS click event) -->
+        <div class="flex-1 overflow-y-auto p-8 space-y-8" id="drawer-content">
+            <!-- Injectable area -->
+        </div>
+    </div>
+
+    <!-- Slide-Over Backdrop -->
+    <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-nothing-950/25 backdrop-blur-xs z-40 hidden opacity-0 transition-opacity duration-300"></div>
+
+    <section id="manifesto" class="py-28 px-6 md:px-12 border-b border-nothing-950/10 bg-cream-100/30">
+        <div class="max-w-4xl mx-auto flex flex-col items-start space-y-8">
+            <span class="font-mono text-xs text-blush-600">// STATEMENT_LOG // 02</span>
+            
+            <h2 class="font-display text-4xl md:text-6xl font-black text-nothing-950 uppercase tracking-tight leading-tight">
+                "Digital architecture with a soft, physical touch."
+            </h2>
+            
+            <p class="font-sans text-base md:text-lg text-nothing-800 font-light leading-relaxed">
+                As a woman pursuing 3D & VFX—an industry historically styled with mechanical, sterile tech tropes—my path is a reimagination. I weave earth elements, clay, botanical geometry, and dusty-pinks back into virtual systems. Technology isn’t cold; it has tactile flesh and natural breath when curated with intent.
+            </p>
+            
+            <!-- Technical Signature Badge -->
+            <div class="border border-nothing-950 bg-cream-50 p-6 flex items-center gap-4 w-full max-w-sm mt-8 rounded-none">
+                <img src="images/portrait.jpg" alt="Emily's Portrait" 
+                     class="w-14 h-14 rounded-none object-cover border border-nothing-950 filter grayscale"
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200';">
+                <div class="font-mono text-xs">
+                    <h4 class="font-bold text-nothing-950 uppercase">EMILY HALSTEAD</h4>
+                    <p class="text-nothing-400 mt-1 font-light">Digital Art @ The BRIT School</p>
+                    <p class="text-[10px] text-blush-600 uppercase">3D Animation & VFX Applicant</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-24 px-6 md:px-12 border-b border-nothing-950/10 bg-cream-50/10">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Left Column -->
+                <div class="lg:col-span-4 space-y-6">
+                    <span class="font-mono text-xs text-blush-600">// SYSTEM_COMPETENCY.md</span>
+                    <h2 class="font-display text-4xl md:text-5xl font-black text-nothing-950 uppercase">Hardware Pipeline</h2>
+                    <p class="font-sans text-xs text-nothing-400 leading-relaxed font-light">
+                        Creative vision requires technical rigor. Here is my practical baseline inside the modeling, lighting, and rendering pipelines to implement seamless physical assets into live-action footage or game space.
+                    </p>
+                    
+                    <div class="border border-nothing-950/20 bg-cream-100/50 p-4 font-mono text-[11px] text-nothing-800 flex items-center gap-3">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blush-300 animate-pulse"></span>
+                        <span>EXPLORING: UE5 Nanite systems & Niagara physics solvers</span>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-1 font-mono text-[11px]">
+                    <!-- Block 1: DCC Tools -->
+                    <div class="bg-cream-100/50 border border-nothing-950/20 p-8 space-y-6">
+                        <h3 class="font-bold text-sm uppercase text-nothing-950 pb-3 border-b border-nothing-950/10 flex justify-between items-center">
+                            DCC & Modeling Tools
+                            <span>[SET_01]</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1 font-semibold tracking-wider text-nothing-800">
+                                    <span>Autodesk Maya</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="h-[1px] bg-nothing-950/20">
+                                    <div class="h-full bg-nothing-950" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1 font-semibold tracking-wider text-nothing-800">
+                                    <span>SideFX Houdini</span>
+                                    <span>60%</span>
+                                </div>
+                                <div class="h-[1px] bg-nothing-950/20">
+                                    <div class="h-full bg-nothing-950" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1 font-semibold tracking-wider text-nothing-800">
+                                    <span>Blender 3D</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="h-[1px] bg-nothing-950/20">
+                                    <div class="h-full bg-nothing-950" style="width: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Block 2: Texturing & Shading -->
+                    <div class="bg-cream-100/50 border border-nothing-950/20 p-8 space-y-6">
+                        <h3 class="font-bold text-sm uppercase text-nothing-950 pb-3 border-b border-nothing-950/10 flex justify-between items-center">
+                            Texturing & Materials
+                            <span>[SET_02]</span>
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1 font-semibold tracking-wider text-nothing-800">
+                                    <span>Substance Painter</span>
+                                    <span>80%</span>
+                                </div>
+                                <div class="h-[1px] bg-nothing-950/20">
+                                    <div class="h-full bg-blush-600" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1 font-semibold tracking-wider text-nothing-800">
+                                    <span>Unreal Engine 5</span>
+                                    <span>75%</span>
+                                </div>
+                                <div class="h-[1px] bg-nothing-950/20">
+                                    <div class="h-full bg-blush-600" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1 font-semibold tracking-wider text-nothing-800">
+                                    <span>Adobe Suite (PS / AE)</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="h-[1px] bg-nothing-950/20">
+                                    <div class="h-full bg-blush-600" style="width: 95%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="connect" class="py-24 px-6 md:px-12 bg-cream-50 relative">
+        <div class="max-w-4xl mx-auto space-y-12">
+            <div class="text-left border-b border-nothing-950 pb-6">
+                <span class="font-mono text-xs text-blush-600">// HOST_LINK // INTERFACE</span>
+                <h2 class="font-display text-4xl md:text-5xl font-black text-nothing-950 uppercase mt-2">Establish Connection</h2>
+            </div>
+
+            <!-- Modern technical form design -->
+            <form onsubmit="handleFormSubmit(event)" class="bg-cream-100/30 border border-nothing-950 p-8 md:p-12 text-left space-y-6 relative overflow-hidden rounded-none">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-[10px]">
+                    <div class="space-y-2">
+                        <label class="font-bold text-nothing-950 uppercase">SENDER_NAME [TEXT]</label>
+                        <input type="text" required placeholder="Vivienne Westwood" 
+                               class="w-full bg-cream-50 border border-nothing-950 focus:border-blush-300 outline-none px-4 py-3 text-xs text-nothing-950 placeholder-nothing-400 transition-colors rounded-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="font-bold text-nothing-950 uppercase">SENDER_EMAIL [SMTP]</label>
+                        <input type="email" required placeholder="vivienne@nothing.net" 
+                               class="w-full bg-cream-50 border border-nothing-950 focus:border-blush-300 outline-none px-4 py-3 text-xs text-nothing-950 placeholder-nothing-400 transition-colors rounded-none">
+                    </div>
+                </div>
+
+                <div class="space-y-2 font-mono text-[10px]">
+                    <label class="font-bold text-nothing-950 uppercase">MESSAGE_ROUTING [SELECTOR]</label>
+                    <select class="w-full bg-cream-50 border border-nothing-950 focus:border-blush-300 outline-none px-4 py-3 text-xs text-nothing-950 transition-colors rounded-none">
+                        <option>University Admissions Panel</option>
+                        <option>Collaborative Creative Project</option>
+                        <option>General Creative Inquiry</option>
+                    </select>
+                </div>
+
+                <div class="space-y-2 font-mono text-[10px]">
+                    <label class="font-bold text-nothing-950 uppercase">BODY_TEXT [PARAGRAPH]</label>
+                    <textarea rows="5" required placeholder="Hi Emily, I saw your procedural specimen model..." 
+                              class="w-full bg-cream-50 border border-nothing-950 focus:border-blush-300 outline-none px-4 py-3 text-xs text-nothing-950 placeholder-nothing-400 transition-colors resize-none rounded-none"></textarea>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="agree" class="accent-nothing-950 rounded-none">
+                    <label for="agree" class="font-mono text-[10px] text-nothing-400 select-none">Send me a copy of this interface transmission</label>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-nothing-950 hover:bg-blush-300 hover:text-nothing-950 text-white font-mono text-xs uppercase transition-all tracking-tight rounded-none">
+                    TRANSMIT_MESSAGE.sys
+                </button>
+
+                <!-- Modern form response notification -->
+                <div id="form-success" class="absolute inset-0 bg-cream-50 flex flex-col items-center justify-center text-center p-8 transform translate-y-full transition-transform duration-500 ease-out z-10 font-mono">
+                    <div class="w-12 h-12 border border-nothing-950 text-nothing-950 flex items-center justify-center mb-4">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blush-300 animate-ping"></span>
+                    </div>
+                    <h3 class="text-lg font-bold uppercase text-nothing-950">TRANSMISSION COMPLETE</h3>
+                    <p class="text-xs text-nothing-400 mt-2 max-w-xs leading-relaxed">
+                        Data routed successfully. Emily will establish contact via provided email protocols.
+                    </p>
+                    <button type="button" onclick="resetForm()" class="mt-6 px-6 py-2.5 border border-nothing-950 text-xs font-semibold hover:bg-nothing-950 hover:text-white transition-all">
+                        SEND_NEW_TRANSMISSION
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer Area -->
+    <footer class="bg-nothing-950 text-cream-50 py-16 px-6 md:px-12 border-t border-nothing-950">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-2">
+                <span class="font-mono font-bold tracking-tight text-xs uppercase">EMILY HALSTEAD</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-blush-300"></span>
+            </div>
+            
+            <div class="text-center md:text-right font-mono text-[10px] text-nothing-400 space-y-1">
+                <p>© EMILY HALSTEAD — Portfolio Application Set // 2026</p>
+                <p>Engineered using Nothing OS Aesthetics & Three.js Canvas Renders.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- -------------------------------------------------- -->
+    <!-- INTERACTIVE SCRIPTS: 3D, Layout, Filter & Drawers -->
+    <!-- -------------------------------------------------- -->
+    <script>
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+        });
+
+        // Enlarging cursor upon interactive element hover
+        document.querySelectorAll('a, button, input, select, textarea, [onclick]').forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.style.width = '32px';
+                cursor.style.height = '32px';
+                cursor.style.backgroundColor = 'rgba(236, 172, 159, 0.25)';
+                cursor.style.borderColor = '#141211';
+            });
+            element.addEventListener('mouseleave', () => {
+                cursor.style.width = '16px';
+                cursor.style.height = '16px';
+                cursor.style.backgroundColor = 'transparent';
+                cursor.style.borderColor = '#141211';
+            });
+        });
+
+        const mobileMenu = document.getElementById('mobile-menu');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMenu);
+
+        function toggleMenu() {
+            const isOpen = mobileMenu.classList.contains('translate-x-0');
+            if (isOpen) {
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('translate-x-full');
+                bar1.classList.remove('rotate-45', 'translate-y-1');
+                bar2.classList.remove('-rotate-45', '-translate-y-1');
+            } else {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenu.classList.add('translate-x-0');
+                bar1.classList.add('rotate-45', 'translate-y-1');
+                bar2.classList.add('-rotate-45', '-translate-y-1');
+            }
+        }
+
+        function filterProjects(category) {
+            const cards = document.querySelectorAll('.project-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-nothing-950', 'text-cream-50');
+                btn.classList.add('bg-transparent', 'text-nothing-950', 'border-nothing-950/20');
+            });
+            
+            const activeBtn = document.getElementById(`filter-${category}`);
+            activeBtn.classList.remove('bg-transparent', 'text-nothing-950', 'border-nothing-950/20');
+            activeBtn.classList.add('bg-nothing-950', 'text-cream-50');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    }, 50);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        const projectData = {
+            'proj-cmp': {
+                title: 'Creative Media Project // The Journey',
+                category: 'Unreal Engine 5 Real-Time Environment Design',
+                tech: 'Unreal Engine 5, Substance Painter, Maya, ZBrush, Megascans',
+                description: 'You have just stumbled across giant fallen moose antlers in the canadian highlands . Do you choose to cross the path to complet the journey? This real-time scene is constructed to examine heavy lighting atmospheres and giant monumental prop integration.',
+                contentHtml: `
+                    <div class="space-y-6 font-mono text-xs text-nothing-950">
+                        <div class="space-y-2">
+                            <span class="text-nothing-400 block">[EXHIBIT GALLERY] Click any visual below to load source reference</span>
+                            
+                            <!-- Large view finder frame -->
+                            <div class="border border-nothing-950 aspect-video overflow-hidden bg-cream-100 relative">
+                                <img id="cmp-gallery-primary" src="finalpiecejourney2.jpg" alt="Active Frame" class="w-full h-full object-cover">
+                                <div id="cmp-frame-title" class="absolute bottom-2 left-2 bg-nothing-950 text-white px-2 py-0.5 text-[9px]">finalpiecejourney2.jpg</div>
+                            </div>
+                        </div>
+
+                        <!-- Mini slider thumbnails matching user file requirements verbatim -->
+                        <div class="grid grid-cols-5 gap-1">
+                            <div class="border border-nothing-950 cursor-pointer overflow-hidden aspect-video bg-white hover:border-blush-300" onclick="updateCmpViewer('finalpiecejourney2.jpg')">
+                                <img src="finalpiecejourney2.jpg" alt="1" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                            </div>
+                            <div class="border border-nothing-950 cursor-pointer overflow-hidden aspect-video bg-white hover:border-blush-300" onclick="updateCmpViewer('HighresScreenshot00005.jpg')">
+                                <img src="HighresScreenshot00005.jpg" alt="2" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                            </div>
+                            <div class="border border-nothing-950 cursor-pointer overflow-hidden aspect-video bg-white hover:border-blush-300" onclick="updateCmpViewer('EmilyHalsteadCMPhires4.jpg')">
+                                <img src="EmilyHalsteadCMPhires4.jpg" alt="3" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                            </div>
+                            <div class="border border-nothing-950 cursor-pointer overflow-hidden aspect-video bg-white hover:border-blush-300" onclick="updateCmpViewer('HighresScreenshot00002.jpg')">
+                                <img src="HighresScreenshot00002.jpg" alt="4" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                            </div>
+                            <div class="border border-nothing-950 cursor-pointer overflow-hidden aspect-video bg-white hover:border-blush-300" onclick="updateCmpViewer('HighresScreenshot00003.jpg')">
+                                <img src="HighresScreenshot00003.jpg" alt="5" class="w-full h-full object-cover grayscale hover:grayscale-0">
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-sm text-nothing-950 uppercase border-b border-nothing-950/10 pb-2">[1.0 ENVIRONMENT LOGS]</h4>
+                            <p class="font-sans text-xs text-nothing-800 font-light leading-relaxed">
+                                The environment centers around the stark visual weight of the Canadian Highlands. Key files referenced in modeling and rendering:
+                            </p>
+                            <ul class="space-y-2 list-none font-mono text-[11px] text-nothing-800">
+                                <li class="border-l-2 border-blush-300 pl-2">
+                                    <strong>finalpiecejourney2.jpg</strong> - Wide scale establishment render representing the complete landscape environment and horizon.
+                                </li>
+                                <li class="border-l-2 border-blush-300 pl-2">
+                                    <strong>HighresScreenshot00005.jpg</strong> - Detail close-up of the left antler system, tribal symbols, and rope tension bindings.
+                                </li>
+                                <li class="border-l-2 border-blush-300 pl-2">
+                                    <strong>EmilyHalsteadCMPhires4.jpg</strong> - Suspension bridge viewport highlighting dreamcatchers filter pattern.
+                                </li>
+                                <li class="border-l-2 border-blush-300 pl-2">
+                                    <strong>HighresScreenshot00002.jpg</strong> - Sunray scattering (Lumen volumetric density study) across the central path.
+                                </li>
+                                <li class="border-l-2 border-blush-300 pl-2">
+                                    <strong>HighresScreenshot00003.jpg</strong> - Right mountain pass visual anchoring system.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            'proj-vfx-wire': {
+                title: 'Botanical Specimen Topology Study',
+                category: '3D modeling / Topology',
+                tech: 'Autodesk Maya, Substance Painter, Arnold Renderer',
+                description: 'A study showcasing precise mesh edge loop layouts for high-end organic plant model rigging. Optimized carefully to manage smooth rigging transformations in real-time engine environments.',
+                contentHtml: `
+                    <div class="space-y-6 font-mono text-xs">
+                        <div class="aspect-video bg-blush-100 border border-nothing-950 relative group">
+                            <img id="wire-image" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200" alt="Specimen Render" class="w-full h-full object-cover">
+                            <div class="absolute bottom-4 left-4 bg-nothing-950 px-3 py-1 text-[9px] text-white">VFX POLY_MAP</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="toggleWireframe(true)" class="flex-1 py-3 bg-nothing-950 text-white uppercase font-bold text-[10px]">RENDER_WIRE</button>
+                            <button onclick="toggleWireframe(false)" class="flex-1 py-3 border border-nothing-950 hover:bg-cream-100 text-nothing-950 uppercase font-bold text-[10px]">RENDER_PBR</button>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-sm text-nothing-950 uppercase border-b border-nothing-950/10 pb-2">[1.0 MODELING LOG]</h4>
+                            <p class="font-sans text-xs text-nothing-800 font-light leading-relaxed">
+                                Developed using strict subdivision workflows. Organic assets are projected with Normal map detail levels generated inside Substance Designer, minimizing overall file footprint and optimizing CPU memory bounds.
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            'proj-photo-tact': {
+                title: 'Terrestrial Material Reference Capture',
+                category: 'Photography Reference specimen',
+                tech: 'Sony Alpha VII, 90mm Macro Lens',
+                description: 'Organic textures of natural cracking sand and terracotta minerals. Captured carefully to act as displacement and height generators for ZBrush alpha brushes.',
+                contentHtml: `
+                    <div class="space-y-6 font-mono text-xs">
+                        <div class="aspect-video border border-nothing-950">
+                            <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=1200" alt="Macro Texture Study" class="w-full h-full object-cover">
+                        </div>
+                        <p class="font-sans text-xs text-nothing-800 font-light leading-relaxed">
+                            Captured in regional clay fields. Analyzes micro stress details of dehydrated mud. These high-fidelity files are processed directly through Photoshop to establish clean height and ambient maps.
+                        </p>
+                    </div>
+                `
+            }
+        };
+
+        const drawer = document.getElementById('project-drawer');
+        const drawerBackdrop = document.getElementById('drawer-backdrop');
+        const drawerContent = document.getElementById('drawer-content');
+
+        function openDrawer(projectId) {
+            const data = projectData[projectId];
+            if (!data) return;
+
+            drawerContent.innerHTML = `
+                <div class="space-y-3 font-mono">
+                    <span class="text-[10px] text-blush-600">// ${data.category}</span>
+                    <h2 class="text-2xl font-black uppercase text-nothing-950">${data.title}</h2>
+                    <div class="inline-block py-1 px-3 bg-cream-100 text-[10px] text-nothing-800 border border-nothing-950/10">
+                        PIPELINE: ${data.tech}
+                    </div>
+                </div>
+                <p class="font-sans text-xs text-nothing-800 font-light leading-relaxed">
+                    ${data.description}
+                </p>
+                <div class="h-[1px] bg-nothing-950/10"></div>
+                ${data.contentHtml}
+            `;
+
+            drawer.classList.remove('translate-x-full');
+            drawerBackdrop.classList.remove('hidden');
+            setTimeout(() => {
+                drawerBackdrop.classList.remove('opacity-0');
+            }, 50);
+        }
+
+        function closeDrawer() {
+            drawer.classList.add('translate-x-full');
+            drawerBackdrop.classList.add('opacity-0');
+            setTimeout(() => {
+                drawerBackdrop.classList.add('hidden');
+            }, 300);
+        }
+
+        // CMP gallery viewer helper
+        function updateCmpViewer(fileName) {
+            const primaryImg = document.getElementById('cmp-gallery-primary');
+            const frameTitle = document.getElementById('cmp-frame-title');
+            if (primaryImg && frameTitle) {
+                primaryImg.src = fileName;
+                frameTitle.textContent = fileName;
+            }
+        }
+
+        // Toggle wireframe mode inside model drawer
+        function toggleWireframe(showWire) {
+            const img = document.getElementById('wire-image');
+            if (showWire) {
+                img.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200';
+            } else {
+                img.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200';
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const successOverlay = document.getElementById('form-success');
+            successOverlay.classList.remove('translate-y-full');
+        }
+
+        function resetForm() {
+            const successOverlay = document.getElementById('form-success');
+            successOverlay.classList.add('translate-y-full');
+            document.querySelector('form').reset();
+        }
+
+        // --------------------------------------------------
+        // THREE.JS: REAL-TIME 3D BLOB SCULPTURE INTERACTION
+        // --------------------------------------------------
+        let scene, camera, renderer, organicBlob;
+        const container = document.getElementById('three-canvas-container');
+
+        function init3D() {
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color('#F9F6F0');
+
+            camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+            camera.position.z = 8;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // Torus Knot sculpture mesh
+            const geometry = new THREE.TorusKnotGeometry(1.6, 0.45, 140, 18);
+            
+            const material = new THREE.MeshPhysicalMaterial({
+                color: 0xECAC9F,           // Pink neon clay tone
+                roughness: 0.5,
+                metalness: 0.1,
+                clearcoat: 0.4,
+                clearcoatRoughness: 0.2,
+                transmission: 0.2,         
+                thickness: 0.6,
+                flatShading: false
+            });
+
+            organicBlob = new THREE.Mesh(geometry, material);
+            scene.add(organicBlob);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xfff5f0, 1.3);
+            dirLight.position.set(5, 10, 7);
+            scene.add(dirLight);
+
+            const keyLight = new THREE.DirectionalLight(0xD3A297, 0.9);
+            keyLight.position.set(-6, -2, 5);
+            scene.add(keyLight);
+
+            const fillLight = new THREE.DirectionalLight(0x8A7E7A, 0.5);
+            fillLight.position.set(0, -10, 0);
+            scene.add(fillLight);
+
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            // Mouse Drag controls
+            container.addEventListener('mousedown', (e) => { isDragging = true; });
+            container.addEventListener('touchstart', (e) => { isDragging = true; previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY }; });
+            
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            window.addEventListener('touchend', () => { isDragging = false; });
+
+            window.addEventListener('mousemove', (e) => {
+                const deltaMove = {
+                    x: e.clientX - previousMousePosition.x,
+                    y: e.clientY - previousMousePosition.y
+                };
+
+                if (isDragging) {
+                    const deltaRotationQuaternion = new THREE.Quaternion()
+                        .setFromEuler(new THREE.Euler(
+                            toRadians(deltaMove.y * 0.5),
+                            toRadians(deltaMove.x * 0.5),
+                            0,
+                            'XYZ'
+                        ));
+                    
+                    organicBlob.quaternion.multiplyQuaternions(deltaRotationQuaternion, organicBlob.quaternion);
+                }
+
+                previousMousePosition = {
+                    x: e.clientX,
+                    y: e.clientY
+                };
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const touch = e.touches[0];
+                const deltaMove = {
+                    x: touch.clientX - previousMousePosition.x,
+                    y: touch.clientY - previousMousePosition.y
+                };
+
+                const deltaRotationQuaternion = new THREE.Quaternion()
+                    .setFromEuler(new THREE.Euler(
+                        toRadians(deltaMove.y * 0.8),
+                        toRadians(deltaMove.x * 0.8),
+                        0,
+                        'XYZ'
+                    ));
+                
+                organicBlob.quaternion.multiplyQuaternions(deltaRotationQuaternion, organicBlob.quaternion);
+
+                previousMousePosition = {
+                    x: touch.clientX,
+                    y: touch.clientY
+                };
+            });
+
+            window.addEventListener('resize', onWindowResize);
+            
+            animate();
+        }
+
+        function toRadians(angle) {
+            return angle * (Math.PI / 180);
+        }
+
+        function onWindowResize() {
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.005;
+
+            if (!organicBlob) return;
+            organicBlob.rotation.y += 0.002;
+            organicBlob.rotation.x += 0.001;
+
+            organicBlob.position.y = Math.sin(time) * 0.1;
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            init3D();
+        };
+    </script>
+</body>
+</html>
